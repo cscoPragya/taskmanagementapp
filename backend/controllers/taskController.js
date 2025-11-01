@@ -1,7 +1,8 @@
 const Task = require("../models/Tasks");
 
-// ✅ Create Task
+//  Create Task
 exports.createTask = async (req, res) => {
+
   try {
     const { title, description, status, priority, dueDate } = req.body;
 
@@ -14,9 +15,10 @@ exports.createTask = async (req, res) => {
       dueDate: dueDate || null,
     });
 
-    await task.save();
-    res.status(201).json({ message: "Task created successfully", task });
+    const savedTask = await task.save();
+    res.status(201).json(savedTask);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "Error creating task", error: error.message });
   }
 };
@@ -45,7 +47,7 @@ exports.updateTask = async (req, res) => {
       return res.status(404).json({ message: "Task not found or unauthorized" });
     }
 
-    res.status(200).json({ message: "Task updated successfully", updatedTask });
+    res.status(200).json(updatedTask);
   } catch (error) {
     res.status(500).json({ message: "Error updating task", error: error.message });
   }

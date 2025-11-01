@@ -61,7 +61,6 @@ const TaskList = ({ tasks, onEdit, onDelete, onStatusChange }) => {
                   {statusTasks.length} {statusTasks.length === 1 ? "task" : "tasks"}
                 </span>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {statusTasks.map((task) => (
                   <TaskCard

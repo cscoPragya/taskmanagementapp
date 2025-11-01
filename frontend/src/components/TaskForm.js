@@ -14,6 +14,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
 
+  // Prefill form when editing a task
   useEffect(() => {
     if (task) {
       setFormData({
@@ -21,11 +22,12 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
         description: task.description || "",
         status: task.status || "pending",
         priority: task.priority || "medium",
-        dueDate: task.dueDate ? task.dueDate.split("T")[0] : "", // date formatting if ISO
+        dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
       })
     }
   }, [task])
 
+  // Validation logic
   const validateForm = () => {
     const newErrors = {}
 
@@ -45,7 +47,6 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
       const selectedDate = new Date(formData.dueDate)
       const today = new Date()
       today.setHours(0, 0, 0, 0)
-
       if (selectedDate < today) {
         newErrors.dueDate = "Due date cannot be in the past"
       }
@@ -55,54 +56,22 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e) => {
+  // ✅ Just validate & send data upward — no fetch calls here
+  const handleSubmit = (e) => {
     e.preventDefault()
     if (!validateForm()) return
-
     setIsLoading(true)
-
-    try {
-      const token = localStorage.getItem("token") // assume JWT token stored here
-
-      const apiUrl = task
-        ? `http://localhost:5000/api/tasks/${task._id}` // update task
-        : "http://localhost:5000/api/tasks" // create task
-
-      const method = task ? "PUT" : "POST"
-
-      const response = await fetch(apiUrl, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      })
-
-      if (!response.ok) {
-        const errData = await response.json()
-        throw new Error(errData.message || "Something went wrong")
-      }
-
-      const data = await response.json()
-
-      // Call parent's onSubmit with response task data
-      onSubmit(data.task || data.updatedTask || data)
-
-    } catch (error) {
-      alert(error.message)
-    } finally {
-      setIsLoading(false)
-    }
+    onSubmit(formData) // parent handles POST/PUT fetch
+    setIsLoading(false)
   }
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }))
-
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -126,15 +95,23 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
 
   return (
     <div className="p-6">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">{task ? "Edit Task" : "Create New Task"}</h2>
-        <button onClick={onCancel} className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+        <h2 className="text-2xl font-bold text-gray-900">
+          {task ? "Edit Task" : "Create New Task"}
+        </h2>
+        <button
+          onClick={onCancel}
+          type="button"
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+        >
           <XMarkIcon className="h-5 w-5 text-gray-500" />
         </button>
       </div>
 
-      
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Title */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
             Task Title *
@@ -145,14 +122,14 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-              errors.title ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.title ? "border-red-500" : "border-gray-300"
+              }`}
             placeholder="Enter task title"
           />
           {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
         </div>
 
+        {/* Description */}
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
             Description *
@@ -163,14 +140,16 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
             rows={4}
             value={formData.description}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${
-              errors.description ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${errors.description ? "border-red-500" : "border-gray-300"
+              }`}
             placeholder="Describe your task in detail"
           />
-          {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+          {errors.description && (
+            <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+          )}
         </div>
 
+        {/* Status & Priority */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
@@ -198,7 +177,9 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${getPriorityColor(formData.priority)}`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${getPriorityColor(
+                formData.priority
+              )}`}
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -207,6 +188,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
           </div>
         </div>
 
+        {/* Due Date */}
         <div>
           <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-2">
             Due Date (Optional)
@@ -217,13 +199,15 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
             name="dueDate"
             value={formData.dueDate}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-              errors.dueDate ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.dueDate ? "border-red-500" : "border-gray-300"
+              }`}
           />
-          {errors.dueDate && <p className="mt-1 text-sm text-red-600">{errors.dueDate}</p>}
+          {errors.dueDate && (
+            <p className="mt-1 text-sm text-red-600">{errors.dueDate}</p>
+          )}
         </div>
 
+        {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <button
             type="submit"
@@ -241,6 +225,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
               "Create Task"
             )}
           </button>
+
           <button
             type="button"
             onClick={onCancel}

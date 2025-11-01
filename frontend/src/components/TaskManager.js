@@ -17,6 +17,11 @@ const TaskManager = ({ user }) => {
   })
   const [loading, setLoading] = useState(false)
 
+
+
+  //just for debugging
+
+
   // Fetch tasks from backend on mount
   useEffect(() => {
     const fetchTasks = async () => {
@@ -66,6 +71,7 @@ const TaskManager = ({ user }) => {
     try {
       setLoading(true)
       const token = localStorage.getItem("token")
+
       const response = await fetch("http://localhost:5000/api/tasks", {
         method: "POST",
         headers: {
@@ -74,12 +80,23 @@ const TaskManager = ({ user }) => {
         },
         body: JSON.stringify(taskData),
       })
+
+      // parse only once
+      const data = await response.json()
+      // const temp={
+      //   title:
+      // }
+
       if (!response.ok) {
-        const errData = await response.json()
-        throw new Error(errData.message || "Failed to create task")
+        throw new Error(data.message || "Failed to create task")
       }
-      const newTask = await response.json()
-      setTasks((prev) => [...prev, newTask])
+
+      // ✅ Add new task to list
+      setTasks((prev) => [...prev, data])
+
+      // Automatically update filtered list
+      setFilteredTasks((prev) => [...prev, data])
+
       setShowForm(false)
     } catch (error) {
       alert(error.message)
@@ -87,6 +104,7 @@ const TaskManager = ({ user }) => {
       setLoading(false)
     }
   }
+
 
   // Update existing task via API
   const handleUpdateTask = async (taskData) => {
@@ -110,7 +128,11 @@ const TaskManager = ({ user }) => {
         prev.map((task) => (task._id === editingTask._id ? updatedTask : task)),
       )
       setEditingTask(null)
+
+      setFilteredTasks((prev) =>
+        prev.map((task) => (task._id === editingTask._id ? updatedTask : task)),)
       setShowForm(false)
+
     } catch (error) {
       alert(error.message)
     } finally {
