@@ -54,37 +54,37 @@ const Login = ({ onLogin }) => {
 
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validateForm()) return;
-  setIsLoading(true);
+    if (!validateForm()) return;
+    setIsLoading(true);
 
-  try {
-    const response = await fetch('http://localhost:5000/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch(`${import.meta.VITE_BACKEND_UR}/api/login`, {
+        method: `POST`,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      setErrors({ general: data.message || 'Login failed' });
+      if (!response.ok) {
+        setErrors({ general: data.message || `Login failed` });
+        setIsLoading(false);
+        return;
+      }
+
+      // Save token and user in localStorage
+      localStorage.setItem(`user`, JSON.stringify(data.user));
+      localStorage.setItem(`token`, data.token);
+
+      onLogin(data.user); // App.js me state update hoga
+    } catch (error) {
+      setErrors({ general: `Network error. Please try again.` });
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    // Save token and user in localStorage
-    localStorage.setItem('user', JSON.stringify(data.user));
-    localStorage.setItem('token', data.token);
-
-    onLogin(data.user); // App.js me state update hoga
-  } catch (error) {
-    setErrors({ general: 'Network error. Please try again.' });
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -121,9 +121,8 @@ const Login = ({ onLogin }) => {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.email ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter your email"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
@@ -140,9 +139,8 @@ const Login = ({ onLogin }) => {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-12 ${
-                      errors.password ? "border-red-500" : "border-gray-300"
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-12 ${errors.password ? "border-red-500" : "border-gray-300"
+                      }`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -178,7 +176,7 @@ const Login = ({ onLogin }) => {
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
+                Don`t have an account?{" "}
                 <Link
                   to="/register"
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"

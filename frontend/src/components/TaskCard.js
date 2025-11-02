@@ -65,7 +65,7 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }) => {
 
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:5000/api/tasks/${task._id}`, {
+      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks/${task._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }) => {
 
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:5000/api/tasks/${task._id}/status`, {
+      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks/${task._id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,9 +112,8 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }) => {
 
   return (
     <div
-      className={`bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-200 ${
-        isDeleting ? "opacity-50 scale-95" : ""
-      }`}
+      className={`bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-200 ${isDeleting ? "opacity-50 scale-95" : ""
+        }`}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">

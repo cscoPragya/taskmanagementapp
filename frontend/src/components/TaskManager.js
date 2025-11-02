@@ -28,7 +28,7 @@ const TaskManager = ({ user }) => {
       setLoading(true)
       try {
         const token = localStorage.getItem("token")
-        const response = await fetch("http://localhost:5000/api/tasks", {
+        const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -72,7 +72,7 @@ const TaskManager = ({ user }) => {
       setLoading(true)
       const token = localStorage.getItem("token")
 
-      const response = await fetch("http://localhost:5000/api/tasks", {
+      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const TaskManager = ({ user }) => {
     try {
       setLoading(true)
       const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:5000/api/tasks/${editingTask._id}`, {
+      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks/${editingTask._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const TaskManager = ({ user }) => {
     try {
       setLoading(true)
       const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks/${taskId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
