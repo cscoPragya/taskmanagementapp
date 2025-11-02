@@ -7,6 +7,7 @@ import Register from "./components/Register"
 import Dashboard from "./components/Dashboard"
 import TaskManager from "./components/TaskManager"
 import Navbar from "./components/Navbar"
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -36,24 +37,42 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-        {isAuthenticated && <Navbar user={user} onLogout={handleLogout} />}
-        <Routes>
-          <Route
-            path="/login"
-            element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
-          />
-          <Route
-            path="/register"
-            element={!isAuthenticated ? <Register onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
-          />
-          <Route path="/dashboard" element={isAuthenticated ? <Dashboard user={user} /> : <Navigate to="/login" />} />
-          <Route path="/tasks" element={isAuthenticated ? <TaskManager user={user} /> : <Navigate to="/login" />} />
-          <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
-        </Routes>
-      </div>
-    </Router>
+
+
+    <>
+
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          {isAuthenticated && <Navbar user={user} onLogout={handleLogout} />}
+          <Routes>
+            <Route
+              path="/login"
+              element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
+            />
+            <Route
+              path="/register"
+              element={!isAuthenticated ? <Register onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
+            />
+            <Route path="/dashboard" element={isAuthenticated ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+            <Route path="/tasks" element={isAuthenticated ? <TaskManager user={user} /> : <Navigate to="/login" />} />
+            <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
+          </Routes>
+        </div>
+      </Router>
+
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
+    </>
+
+
   )
 }
 

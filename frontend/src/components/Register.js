@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
+import { toast } from 'react-toastify'
 
 const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -84,6 +85,7 @@ const Register = ({ onLogin }) => {
       const data = await response.json();
 
       if (!response.ok) {
+        toast.error("We are facing some issues, please try after some time.")
         setErrors({ general: data.message || 'Registration failed' });
         setIsLoading(false);
         return;

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
+import { toast } from "react-toastify"
 
 const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -69,6 +70,7 @@ const Login = ({ onLogin }) => {
       const data = await response.json();
 
       if (!response.ok) {
+        toast.error("Invalid email or password!");
         setErrors({ general: data.message || `Login failed` });
         setIsLoading(false);
         return;
