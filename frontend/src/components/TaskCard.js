@@ -65,7 +65,7 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }) => {
 
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks/${task._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tasks/${task._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange }) => {
 
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(`${import.meta.VITE_BACKEND_URL}/api/tasks/${task._id}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tasks/${task._id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

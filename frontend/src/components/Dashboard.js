@@ -34,7 +34,7 @@ const Dashboard = ({ user }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/tasks", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +69,7 @@ const Dashboard = ({ user }) => {
   const handleDeleteTask = async (taskId) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tasks/${taskId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -86,32 +86,32 @@ const Dashboard = ({ user }) => {
   };
 
   // ✅ 4. Add new task (Instant UI Update)
-//   const handleAddTask = async (newTask) => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const res = await fetch("http://localhost:5000/api/tasks", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: JSON.stringify(newTask),
-//     });
+  //   const handleAddTask = async (newTask) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const res = await fetch("http://localhost:5000/api/tasks", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify(newTask),
+  //     });
 
-//     if (!res.ok) throw new Error("Failed to create task");
+  //     if (!res.ok) throw new Error("Failed to create task");
 
-//     await res.json();
+  //     await res.json();
 
-//     // ✅ API se fresh data reload
-//     fetchTasks();
-//   } catch (err) {
-//     console.error("Add Error:", err.message);
-//   }
-// };
+  //     // ✅ API se fresh data reload
+  //     fetchTasks();
+  //   } catch (err) {
+  //     console.error("Add Error:", err.message);
+  //   }
+  // };
 
-const handleAddTask = () => {
-  fetchTasks(); // Bas updated tasks ko reload kar lega
-};
+  const handleAddTask = () => {
+    fetchTasks(); // Bas updated tasks ko reload kar lega
+  };
 
 
   const getRecentTasks = () => {
