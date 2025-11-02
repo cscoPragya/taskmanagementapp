@@ -19,6 +19,7 @@ function App() {
       setUser(JSON.parse(savedUser))
       setIsAuthenticated(true)
     }
+    console.log(`${import.meta.env.VITE_BACKEND_URL}`)
   }, [])
 
   const handleLogin = (userData) => {
