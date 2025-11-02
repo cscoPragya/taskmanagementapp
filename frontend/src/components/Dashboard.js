@@ -34,7 +34,7 @@ const Dashboard = ({ user }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tasks`, {
+      const res = await fetch(`${import.meta.env.REACT_APP_BACKEND_URL}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +69,7 @@ const Dashboard = ({ user }) => {
   const handleDeleteTask = async (taskId) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tasks/${taskId}`, {
+      const res = await fetch(`${import.meta.env.REACT_APP_BACKEND_URL}/api/tasks/${taskId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

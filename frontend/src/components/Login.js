@@ -60,7 +60,7 @@ const Login = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/login`, {
+      const response = await fetch(`${import.meta.env.REACT_APP_BACKEND_URL}/api/login`, {
         method: `POST`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
